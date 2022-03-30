@@ -6,8 +6,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    //通过用户id获取用户对象的方法
+
+    // 通过用户id获取用户对象的方法
     public UserModel getUserById(Integer id);
+
+    // 通过用户信息telephone获取对象的方法
+    public UserModel getUserInfoByTelephone(String telephone);
 
     public Boolean getUserByTelephone(String telephone);
 
