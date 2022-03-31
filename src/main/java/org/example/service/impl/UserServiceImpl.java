@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
+import org.apache.catalina.User;
 import org.example.dao.UserDOMapper;
 import org.example.dao.UserPasswordDOMapper;
 import org.example.dataobject.UserDO;
@@ -47,11 +48,37 @@ public class UserServiceImpl implements UserService {
         return convertFromDataObject(userDO, userPasswordDO);
     }
 
+    @Override
+    public UserModel getUserInfoByTelephone(String telephone) {
+        UserDO userDO = userDOMapper.selectByTelephone(telephone);
+        if (userDO == null) {
+            return null;
+        }
+        UserModel userModel = new UserModel();
+        BeanUtils.copyProperties(userDO, userModel);
+        return userModel;
+    }
+
+    public void updateUserNameByTelephone(UserModel userModel) {
+        UserDO userDO = convertFromModel(userModel);
+        userDOMapper.updateNameByTelephone(userDO);
+    }
+
+    public void updateUserGenderByTelephone(UserModel userModel) {
+        UserDO userDO = convertFromModel(userModel);
+        userDOMapper.updateGenderByTelephone(userDO);
+    }
+
+    public void updateUserAgeByTelephone(UserModel userModel) {
+        UserDO userDO = convertFromModel(userModel);
+        userDOMapper.updateAgeByTelephone(userDO);
+    }
+
     //用户获取验证码时，检测是否已存在注册用户
     @Override
     public Boolean getUserByTelephone(String telephone) {
         UserDO userDO = userDOMapper.selectByTelephone(telephone);
-        if (userDO == null){
+        if (userDO == null) {
             return  false;
         } else {
             return  true;
