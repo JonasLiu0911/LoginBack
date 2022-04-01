@@ -46,3 +46,15 @@ INSERT INTO `user_password` VALUES (27, '4QrcOUm6Wau+VuBX8g+IPg==', 2, '2022-02-
 INSERT INTO `user_password` VALUES (28, '4QrcOUm6Wau+VuBX8g+IPg==', 5, '2022-02-11 16:06:57', '2022-02-11 16:06:57');
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+DROP TABLE IF EXISTS `user_schedule`;
+CREATE TABLE `user_location`  (
+                                  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                  `longitude` decimal(10,7) NOT NULL COMMENT '经度',
+                                  `latitude` decimal(10,7) NOT NULL COMMENT '纬度',
+                                  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '关联用户id',
+                                  `poi_info` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '位置信息',
+                                  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
+                                  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;

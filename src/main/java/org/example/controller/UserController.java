@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import org.apache.catalina.User;
 import org.example.controller.viewobject.RegisterVO;
 import org.example.controller.viewobject.UserVO;
 import org.example.error.BusinessException;
@@ -43,6 +44,12 @@ public class UserController extends BaseController {
     private HttpSession session;
 
 
+    /**
+     * 网页测试 获取用户信息
+     * @param id
+     * @return
+     * @throws BusinessException
+     */
     @RequestMapping("/get")
     @ResponseBody
     public CommonReturnType getUser(@RequestParam(name = "id") Integer id) throws BusinessException {
@@ -61,17 +68,149 @@ public class UserController extends BaseController {
         return CommonReturnType.create(userVO);
     }
 
-    //将UserModel转为UserVO
-    private UserVO convertFromModel(UserModel userModel) {
-        if (userModel == null) {
-            return null;
+
+    /**
+     * 网页测试 注册
+     * @param registerVO
+     * @param bindingResult
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws NoSuchAlgorithmException
+     * @throws BusinessException
+     */
+    @RequestMapping(value = "/registerjson", method = {RequestMethod.POST})
+    @ResponseBody
+    public CommonReturnType registerJson(
+            @Valid
+            @RequestBody RegisterVO registerVO,
+            BindingResult bindingResult
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException, BusinessException {
+        if (bindingResult.hasErrors()) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, CommonUtil.processErrorString(bindingResult));
         }
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(userModel, userVO);
-        return userVO;
+
+        // 从Session中获取对应手机号的验证码
+        // otpCode是用户填写的，inSessionOtpCode是系统生成的
+        String inSessionOtpCode = (String) session.getAttribute(registerVO.getTelephone());
+        Log.info("telephone: " + registerVO.getTelephone() + " inSessionOtpCode: " + inSessionOtpCode + " otpCode: " + registerVO.getOtpCode());
+        if (!StringUtils.equals(registerVO.getOtpCode(), inSessionOtpCode)) {
+            Log.info("短信验证码错误");
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "短信验证码错误");
+        }
+
+        // 类型转换，适配数据库
+        int age = Integer.parseInt(registerVO.getAge());
+        Byte gender = Byte.parseByte(registerVO.getGender());
+
+        UserModel userModel = new UserModel();
+        userModel.setName(registerVO.getName());
+        userModel.setGender(gender);
+        userModel.setAge(age);
+        userModel.setTelephone(registerVO.getTelephone());
+        userModel.setRegisterMode("byphone");
+        userModel.setEncryptPassword(this.EncodeByMd5(registerVO.getTelephone()));
+
+        userService.register(userModel);
+        // 注册成功，只返回success即可
+        return CommonReturnType.create(null);
     }
 
-    //用户获取otp短信的接口
+
+    /**
+     * 获取用户信息接口，用于展示在个人主页
+     * @param telephone
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/getUserInfo")
+    @ResponseBody
+    public CommonReturnType getUserByTelephone(@RequestParam(name = "telephone") String telephone) throws BusinessException {
+        UserModel userModel = userService.getUserInfoByTelephone(telephone);
+        if (userModel == null) {
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+        }
+        UserVO userVO = convertFromModel(userModel);
+        return CommonReturnType.create(userVO);
+    }
+
+
+    /**
+     * 修改用户昵称接口
+     * @param telephone
+     * @param name
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/updateUserName")
+    @ResponseBody
+    public CommonReturnType updateNameByTelephone(
+            @RequestParam(name = "telephone") String telephone,
+            @RequestParam(name = "name") String name
+    ) throws BusinessException {
+
+        UserModel userModel = new UserModel();
+        userModel.setName(name);
+        userModel.setTelephone(telephone);
+
+        userService.updateUserNameByTelephone(userModel);
+        return CommonReturnType.create(null);
+    }
+
+
+    /**
+     * 修改用户性别接口
+     * @param telephone
+     * @param genderStr
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/updateUserGender")
+    @ResponseBody
+    public CommonReturnType updateGenderByTelephone(
+            @RequestParam(name = "telephone") String telephone,
+            @RequestParam(name = "gender") String genderStr
+    ) throws BusinessException {
+        // 适配数据库
+        Byte gender = Byte.parseByte(genderStr);
+        UserModel userModel = new UserModel();
+        userModel.setTelephone(telephone);
+        userModel.setGender(gender);
+
+        userService.updateUserGenderByTelephone(userModel);
+        return CommonReturnType.create(null);
+    }
+
+
+    /**
+     * 修改用户年龄接口
+     * @param telephone
+     * @param ageStr
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/updateUserAge")
+    @ResponseBody
+    public CommonReturnType updateAgeByTelephone(
+            @RequestParam(name = "telephone") String telephone,
+            @RequestParam(name = "age") String ageStr
+    ) throws BusinessException {
+        // 适配数据库
+        int age = Integer.parseInt(ageStr);
+        UserModel userModel = new UserModel();
+        userModel.setTelephone(telephone);
+        userModel.setAge(age);
+
+        userService.updateUserAgeByTelephone(userModel);
+        return CommonReturnType.create(null);
+    }
+
+
+    /**
+     * 获取验证码接口
+     * @param telephone
+     * @return
+     * @throws BusinessException
+     */
     @RequestMapping(value = "/getOtp", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType getOtp(@RequestParam(name = "telephone") String telephone) throws BusinessException {
@@ -102,6 +241,19 @@ public class UserController extends BaseController {
     }
 
 
+    /**
+     * 用户注册接口
+     * @param telephone
+     * @param otpCode
+     * @param name
+     * @param ageStr
+     * @param genderStr
+     * @param password
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws NoSuchAlgorithmException
+     * @throws BusinessException
+     */
     @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType register(
@@ -149,45 +301,17 @@ public class UserController extends BaseController {
         return CommonReturnType.create(userModel);
     }
 
-    //用户注册接口
-    @RequestMapping(value = "/registerjson", method = {RequestMethod.POST})
-    @ResponseBody
-    public CommonReturnType registerJson(
-            @Valid
-            @RequestBody RegisterVO registerVO,
-            BindingResult bindingResult
-    ) throws UnsupportedEncodingException, NoSuchAlgorithmException, BusinessException {
-        if (bindingResult.hasErrors()) {
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, CommonUtil.processErrorString(bindingResult));
-        }
 
-        // 从Session中获取对应手机号的验证码
-        // otpCode是用户填写的，inSessionOtpCode是系统生成的
-        String inSessionOtpCode = (String) session.getAttribute(registerVO.getTelephone());
-        Log.info("telephone: " + registerVO.getTelephone() + " inSessionOtpCode: " + inSessionOtpCode + " otpCode: " + registerVO.getOtpCode());
-        if (!StringUtils.equals(registerVO.getOtpCode(), inSessionOtpCode)) {
-            Log.info("短信验证码错误");
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "短信验证码错误");
-        }
-
-        // 类型转换，适配数据库
-        int age = Integer.parseInt(registerVO.getAge());
-        Byte gender = Byte.parseByte(registerVO.getGender());
-
-        UserModel userModel = new UserModel();
-        userModel.setName(registerVO.getName());
-        userModel.setGender(gender);
-        userModel.setAge(age);
-        userModel.setTelephone(registerVO.getTelephone());
-        userModel.setRegisterMode("byphone");
-        userModel.setEncryptPassword(this.EncodeByMd5(registerVO.getTelephone()));
-
-        userService.register(userModel);
-        // 注册成功，只返回success即可
-        return CommonReturnType.create(null);
-    }
-
-    //用户登录接口
+    /**
+     * 用户登录接口
+     * @param telephone
+     * @param password
+     * @param type
+     * @return
+     * @throws BusinessException
+     * @throws UnsupportedEncodingException
+     * @throws NoSuchAlgorithmException
+     */
     @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType login(
@@ -232,7 +356,17 @@ public class UserController extends BaseController {
         return CommonReturnType.create(userModel);
     }
 
-    //MD5加密+BASE64编码
+    // 将UserModel转为UserVO
+    private UserVO convertFromModel(UserModel userModel) {
+        if (userModel == null) {
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userModel, userVO);
+        return userVO;
+    }
+
+    // MD5加密+BASE64编码
     public String EncodeByMd5(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         BASE64Encoder base64en = new BASE64Encoder();

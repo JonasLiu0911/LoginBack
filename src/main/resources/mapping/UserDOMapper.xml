@@ -167,4 +167,19 @@
       third_part_id = #{thirdPartId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateNameByTelephone" parameterType="org.example.dataobject.UserDO">
+    update user_info
+    set name = #{name,jdbcType=VARCHAR}
+    where telephone = #{telephone,jdbcType=VARCHAR}
+  </update>
+  <update id="updateGenderByTelephone" parameterType="org.example.dataobject.UserDO">
+    update user_info
+    set gender = #{gender,jdbcType=TINYINT}
+    where telephone = #{telephone,jdbcType=VARCHAR}
+  </update>
+  <update id="updateAgeByTelephone" parameterType="org.example.dataobject.UserDO">
+    update user_info
+    set age = #{age,jdbcType=INTEGER}
+    where telephone = #{telephone,jdbcType=VARCHAR}
+  </update>
 </mapper>
