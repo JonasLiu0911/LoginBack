@@ -19,6 +19,8 @@ public interface UserService {
     void updateUserGenderByTelephone(UserModel userModel) throws BusinessException;
     void updateUserAgeByTelephone(UserModel userModel) throws BusinessException;
 
+    void updateUserPasswordById(UserModel userModel) throws BusinessException;
+
     public Boolean getUserByTelephone(String telephone);
 
     void register(UserModel userModel) throws BusinessException;

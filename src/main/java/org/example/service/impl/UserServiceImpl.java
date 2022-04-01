@@ -59,19 +59,38 @@ public class UserServiceImpl implements UserService {
         return userModel;
     }
 
+    // 修改昵称
+    @Override
     public void updateUserNameByTelephone(UserModel userModel) {
         UserDO userDO = convertFromModel(userModel);
         userDOMapper.updateNameByTelephone(userDO);
     }
 
+    // 修改性别
+    @Override
     public void updateUserGenderByTelephone(UserModel userModel) {
         UserDO userDO = convertFromModel(userModel);
         userDOMapper.updateGenderByTelephone(userDO);
     }
 
+    // 修改年龄
+    @Override
     public void updateUserAgeByTelephone(UserModel userModel) {
         UserDO userDO = convertFromModel(userModel);
         userDOMapper.updateAgeByTelephone(userDO);
+    }
+
+    // 修改密码
+    @Override
+    public void updateUserPasswordById(UserModel userModel) {
+
+        String telephone = userModel.getTelephone();
+
+        UserDO userDO = userDOMapper.selectByTelephone(telephone);
+        userModel.setId(userDO.getId());
+
+        UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
+        userPasswordDOMapper.updateByUserId(userPasswordDO);
     }
 
     //用户获取验证码时，检测是否已存在注册用户
@@ -145,9 +164,10 @@ public class UserServiceImpl implements UserService {
             return  null;
         }
         UserPasswordDO userPasswordDO = new UserPasswordDO();
-        userPasswordDO.setEncryptPassword(userModel.getEncryptPassword());
 
+        userPasswordDO.setEncryptPassword(userModel.getEncryptPassword());
         userPasswordDO.setUserId(userModel.getId());
+
         return userPasswordDO;
     }
 

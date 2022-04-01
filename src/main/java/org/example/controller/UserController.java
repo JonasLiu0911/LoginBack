@@ -206,6 +206,30 @@ public class UserController extends BaseController {
 
 
     /**
+     * 修改用户密码接口
+     * @param telephone
+     * @param password
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws NoSuchAlgorithmException
+     * @throws BusinessException
+     */
+    @RequestMapping(value = "/updateUserPwd", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonReturnType updatePwdByTelephone(
+            @RequestParam(name = "telephone") String telephone,
+            @RequestParam(name = "password") String password
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException, BusinessException {
+        UserModel userModel = new UserModel();
+        userModel.setTelephone(telephone);
+        userModel.setEncryptPassword(this.EncodeByMd5(password));
+
+        userService.updateUserPasswordById(userModel);
+        return CommonReturnType.create(userModel);
+    }
+
+
+    /**
      * 获取验证码接口
      * @param telephone
      * @return
