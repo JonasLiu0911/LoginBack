@@ -44,6 +44,12 @@
     where telephone = #{telephone,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectIdByTelephone" resultType="java.lang.Integer">
+    select id
+    from user_info
+    where telephone = #{telephone,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
       WARNING - @mbg.generated
