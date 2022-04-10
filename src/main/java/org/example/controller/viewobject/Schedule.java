@@ -1,16 +1,36 @@
-package org.example.service.model;
+package org.example.controller.viewobject;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class ScheduleModel {
+public class Schedule {
     private Integer id;
     private BigDecimal longitude;
     private BigDecimal latitude;
-    private Integer userId;
+    private String telephone;
     private String scheduleTitle;
     private String scheduleInfo;
     private Long scheduleStartTime;
+
+    public Schedule(Integer id,
+                    BigDecimal longitude,
+                    BigDecimal latitude,
+                    String telephone,
+                    String scheduleTitle,
+                    String scheduleInfo,
+                    Long scheduleStartTime) {
+        this.id = id;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.telephone = telephone;
+        this.scheduleTitle = scheduleTitle;
+        this.scheduleInfo = scheduleInfo;
+        this.scheduleStartTime = scheduleStartTime;
+    }
+
+    public Schedule() {
+
+    }
 
     public Integer getId() {
         return id;
@@ -36,12 +56,12 @@ public class ScheduleModel {
         this.latitude = latitude;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
     public String getScheduleTitle() {
@@ -67,5 +87,4 @@ public class ScheduleModel {
     public void setScheduleStartTime(Long scheduleStartTime) {
         this.scheduleStartTime = scheduleStartTime;
     }
-
 }
