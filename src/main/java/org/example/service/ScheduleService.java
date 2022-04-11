@@ -12,7 +12,9 @@ public interface ScheduleService {
 
     ScheduleModel getScheduleById(Integer id);
 
-    List<UserScheduleDO> getScheduleByTelephone(String telephone);
+    List<UserScheduleDO> getScheduleByTelephoneForNow(String telephone);
 
     void addSchedule(ScheduleModel scheduleModel) throws BusinessException;
+
+    int deleteScheduleById(Integer id);
 }

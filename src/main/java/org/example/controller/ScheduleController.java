@@ -73,7 +73,7 @@ public class ScheduleController extends BaseController {
     @RequestMapping("/getSchedule")
     @ResponseBody
     public CommonReturnType getScheduleByTelephone(@RequestParam(name = "telephone") String telephone) throws BusinessException {
-        List<UserScheduleDO> userScheduleDOList = scheduleService.getScheduleByTelephone(telephone);
+        List<UserScheduleDO> userScheduleDOList = scheduleService.getScheduleByTelephoneForNow(telephone);
 
         if (userScheduleDOList.size() == 0) {
             throw new BusinessException(EmBusinessError.SCHEDULE_NOT_EXIST);
@@ -93,42 +93,40 @@ public class ScheduleController extends BaseController {
         return CommonReturnType.create(userScheduleDOList);
     }
 
+    /**
+     * 添加日程接口
+     * @param jsonStr
+     * @return
+     * @throws BusinessException
+     * @throws IOException
+     */
     @RequestMapping(value = "/addSchedule", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    public CommonReturnType addSchedule(
-            @RequestParam(name = "jsonStr") String jsonStr
-    ) throws BusinessException, IOException {
+    public CommonReturnType addSchedule(@RequestParam(name = "jsonStr") String jsonStr) throws BusinessException {
 
         System.out.println(jsonStr);
         JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-        System.out.println(jsonObject.getString("scheduleInfo"));
-        System.out.println(jsonObject.getBigDecimal("latitude"));
-        System.out.println(jsonObject.getLong("scheduleStartTime"));
 
         UserModel userModel = userService.getUserInfoByTelephone(jsonObject.getString("telephone"));
         Integer userId = userModel.getId();
-        System.out.println(userId);
 
         ScheduleModel scheduleModel = new ScheduleModel();
         scheduleModel.setUserId(userId);
-
         scheduleModel.setLongitude(jsonObject.getBigDecimal("longitude"));
-        System.out.println(scheduleModel.getLongitude());
-
         scheduleModel.setLatitude(jsonObject.getBigDecimal("latitude"));
-        System.out.println(scheduleModel.getLatitude());
-
         scheduleModel.setScheduleTitle(jsonObject.getString("scheduleTitle"));
-        System.out.println(scheduleModel.getScheduleTitle());
-
         scheduleModel.setScheduleInfo(jsonObject.getString("scheduleInfo"));
-        System.out.println(scheduleModel.getScheduleInfo());
-
         scheduleModel.setScheduleStartTime(jsonObject.getLong("scheduleStartTime"));
-        System.out.println(scheduleModel.getScheduleStartTime());
 
         scheduleService.addSchedule(scheduleModel);
-        return CommonReturnType.create(scheduleModel);
 
+        return CommonReturnType.create(scheduleModel);
+    }
+
+    @RequestMapping("/deleteSchedule")
+    @ResponseBody
+    public CommonReturnType deleteSchedule(@RequestParam(name = "scheduleId") Integer id) throws BusinessException {
+        int nums = scheduleService.deleteScheduleById(id);
+        return CommonReturnType.create(nums);
     }
 }

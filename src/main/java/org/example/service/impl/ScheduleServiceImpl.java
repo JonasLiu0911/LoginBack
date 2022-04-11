@@ -11,6 +11,7 @@ import org.example.error.EmBusinessError;
 import org.example.service.ScheduleService;
 import org.example.service.model.ScheduleModel;
 import org.example.service.model.UserModel;
+import org.example.utils.DateUtils;
 import org.example.validator.ValidationResult;
 import org.example.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Validator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -52,7 +56,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<UserScheduleDO> getScheduleByTelephone(String telephone) {
+    public List<UserScheduleDO> getScheduleByTelephoneForNow(String telephone) {
 
         Integer userId = userDOMapper.selectIdByTelephone(telephone);
         List<UserScheduleDO> userScheduleDOList = userScheduleDOMapper.selectByUserId(userId);
@@ -60,6 +64,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (userScheduleDOList.size() == 0) {
             return null;
         }
+
+        System.out.println(userScheduleDOList.size());
+
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(dateFormat.format(date));
+        Long timeString = DateUtils.getString2Time(dateFormat.format(date), "yyyy-MM-dd HH:mm:ss");
+
+        Iterator<UserScheduleDO> iterator = userScheduleDOList.iterator();
+        while (iterator.hasNext()) {
+            UserScheduleDO i = iterator.next();
+            if (i.getScheduleStartTime() < timeString) {
+                iterator.remove();
+            }
+        }
+
+        System.out.println(userScheduleDOList.size());
 
         return userScheduleDOList;
     }
@@ -78,7 +99,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         UserScheduleDO userScheduleDO = convertFromModel(scheduleModel);
         userScheduleDOMapper.insertSelective(userScheduleDO);
+    }
 
+    public int deleteScheduleById(Integer scheduleId) {
+        int nums = userScheduleDOMapper.deleteByPrimaryKey(scheduleId);
+        return nums;
     }
 
     private UserScheduleDO convertFromModel(ScheduleModel scheduleModel) {
