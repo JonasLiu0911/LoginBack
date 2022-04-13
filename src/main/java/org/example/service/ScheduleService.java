@@ -17,4 +17,6 @@ public interface ScheduleService {
     void addSchedule(ScheduleModel scheduleModel) throws BusinessException;
 
     int deleteScheduleById(Integer id);
+
+    void updateScheduleById(ScheduleModel scheduleModel) throws BusinessException;
 }

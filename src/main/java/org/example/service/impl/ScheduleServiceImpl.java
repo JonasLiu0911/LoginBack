@@ -88,6 +88,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Transactional
     public void addSchedule(ScheduleModel scheduleModel) throws BusinessException {
+
         if (scheduleModel == null) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
@@ -98,12 +99,30 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
         UserScheduleDO userScheduleDO = convertFromModel(scheduleModel);
-        userScheduleDOMapper.insertSelective(userScheduleDO);
+        int num = userScheduleDOMapper.insertSelective(userScheduleDO);
+        System.out.println(num);
     }
 
     public int deleteScheduleById(Integer scheduleId) {
         int nums = userScheduleDOMapper.deleteByPrimaryKey(scheduleId);
         return nums;
+    }
+
+    @Override
+    public void updateScheduleById(ScheduleModel scheduleModel) throws BusinessException {
+
+        if (scheduleModel == null) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+        ValidationResult result = validator.validate(scheduleModel);
+        if (result.isHasError()) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, result.getErrMsg());
+        }
+
+        UserScheduleDO userScheduleDO = convertFromModel(scheduleModel);
+        int num = userScheduleDOMapper.updateByPrimaryKeySelective(userScheduleDO);
+        System.out.println(num);
+
     }
 
     private UserScheduleDO convertFromModel(ScheduleModel scheduleModel) {

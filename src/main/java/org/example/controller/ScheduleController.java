@@ -123,6 +123,29 @@ public class ScheduleController extends BaseController {
         return CommonReturnType.create(scheduleModel);
     }
 
+    @RequestMapping("/updateSchedule")
+    @ResponseBody
+    public CommonReturnType updateSchedule(@RequestParam(name = "jsonStr") String jsonStr) throws BusinessException {
+        System.out.println(jsonStr);
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+
+        UserModel userModel = userService.getUserInfoByTelephone(jsonObject.getString("telephone"));
+        Integer userId = userModel.getId();
+
+        ScheduleModel scheduleModel = new ScheduleModel();
+        scheduleModel.setId(jsonObject.getInteger("id"));
+        scheduleModel.setUserId(userId);
+        scheduleModel.setLongitude(jsonObject.getBigDecimal("longitude"));
+        scheduleModel.setLatitude(jsonObject.getBigDecimal("latitude"));
+        scheduleModel.setScheduleTitle(jsonObject.getString("scheduleTitle"));
+        scheduleModel.setScheduleInfo(jsonObject.getString("scheduleInfo"));
+        scheduleModel.setScheduleStartTime(jsonObject.getLong("scheduleStartTime"));
+
+        scheduleService.updateScheduleById(scheduleModel);
+
+        return CommonReturnType.create(scheduleModel);
+    }
+
     @RequestMapping("/deleteSchedule")
     @ResponseBody
     public CommonReturnType deleteSchedule(@RequestParam(name = "scheduleId") Integer id) throws BusinessException {
