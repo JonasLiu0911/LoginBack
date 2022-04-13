@@ -14,6 +14,8 @@ public interface ScheduleService {
 
     List<UserScheduleDO> getScheduleByTelephoneForNow(String telephone);
 
+    List<UserScheduleDO> getHistoryByTel(String telephone);
+
     void addSchedule(ScheduleModel scheduleModel) throws BusinessException;
 
     int deleteScheduleById(Integer id);

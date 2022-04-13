@@ -85,6 +85,30 @@ public class ScheduleServiceImpl implements ScheduleService {
         return userScheduleDOList;
     }
 
+    public List<UserScheduleDO> getHistoryByTel(String telephone) {
+        Integer userId = userDOMapper.selectIdByTelephone(telephone);
+        List<UserScheduleDO> userScheduleDOList = userScheduleDOMapper.selectByUserId(userId);
+
+        if (userScheduleDOList.size() == 0) {
+            return null;
+        }
+
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(dateFormat.format(date));
+        Long timeString = DateUtils.getString2Time(dateFormat.format(date), "yyyy-MM-dd HH:mm:ss");
+
+        Iterator<UserScheduleDO> iterator = userScheduleDOList.iterator();
+        while (iterator.hasNext()) {
+            UserScheduleDO i = iterator.next();
+            if (i.getScheduleStartTime() > timeString) {
+                iterator.remove();
+            }
+        }
+
+        return userScheduleDOList;
+    }
+
     @Override
     @Transactional
     public void addSchedule(ScheduleModel scheduleModel) throws BusinessException {

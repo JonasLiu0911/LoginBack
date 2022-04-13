@@ -93,6 +93,18 @@ public class ScheduleController extends BaseController {
         return CommonReturnType.create(userScheduleDOList);
     }
 
+    @RequestMapping("/getHistory")
+    @ResponseBody
+    public CommonReturnType getHistoryByTel(@RequestParam(name = "telephone") String telephone) throws BusinessException {
+        List<UserScheduleDO> userScheduleDOList = scheduleService.getHistoryByTel(telephone);
+
+        if (userScheduleDOList.size() == 0) {
+            throw new BusinessException(EmBusinessError.SCHEDULE_NOT_EXIST);
+        }
+
+        return CommonReturnType.create(userScheduleDOList);
+    }
+
     /**
      * 添加日程接口
      * @param jsonStr
