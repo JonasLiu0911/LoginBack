@@ -126,12 +126,31 @@ public class UserController extends BaseController {
     @RequestMapping("/getUserInfo")
     @ResponseBody
     public CommonReturnType getUserByTelephone(@RequestParam(name = "telephone") String telephone) throws BusinessException {
+        String headUrl = userService.getHeadUrlByTelephone(telephone);
         UserModel userModel = userService.getUserInfoByTelephone(telephone);
         if (userModel == null) {
             throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
         }
+        userModel.setHeadUrl(headUrl);
         UserVO userVO = convertFromModel(userModel);
         return CommonReturnType.create(userVO);
+    }
+
+    @RequestMapping("updateUserAvatar")
+    @ResponseBody
+    public CommonReturnType updateAvatarByTelephone(
+            @RequestParam(name = "telephone") String telephone,
+            @RequestParam(name = "headUrl") String headUrl
+    ) throws BusinessException {
+        UserModel userModel = new UserModel();
+        userModel.setHeadUrl(headUrl);
+        userModel.setTelephone(telephone);
+
+        System.out.println(headUrl);
+        System.out.println(telephone);
+
+        userService.updateUserHeadByTelephone(userModel);
+        return CommonReturnType.create(null);
     }
 
 

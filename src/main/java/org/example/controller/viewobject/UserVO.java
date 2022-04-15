@@ -6,6 +6,7 @@ public class UserVO {
     private Byte gender;
     private Integer age;
     private String telephone;
+    private String headUrl;
 
     public Integer getId() {
         return id;
@@ -45,5 +46,13 @@ public class UserVO {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
     }
 }

@@ -21,6 +21,7 @@ public class UserModel {
     private String thirdPartyId;
     @NotNull(message = "密码不能为空")
     private String encryptPassword;
+    private String headUrl;          // 用户头像路径
 
 
     public Integer getId() {
@@ -85,5 +86,13 @@ public class UserModel {
 
     public void setEncryptPassword(String encryptPassword) {
         this.encryptPassword = encryptPassword;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
     }
 }

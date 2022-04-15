@@ -2,8 +2,10 @@ package org.example.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import org.apache.catalina.User;
+import org.example.dao.UserAvatarDOMapper;
 import org.example.dao.UserDOMapper;
 import org.example.dao.UserPasswordDOMapper;
+import org.example.dataobject.UserAvatarDO;
 import org.example.dataobject.UserDO;
 import org.example.dataobject.UserPasswordDO;
 import org.example.error.BusinessException;
@@ -27,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserPasswordDOMapper userPasswordDOMapper;
+
+    @Autowired
+    private UserAvatarDOMapper userAvatarDOMapper;
 
     @Autowired
     private ValidatorImpl validator;
@@ -57,6 +62,33 @@ public class UserServiceImpl implements UserService {
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(userDO, userModel);
         return userModel;
+    }
+
+    @Override
+    public String getHeadUrlByTelephone(String telephone) {
+
+        Integer userId = userDOMapper.selectIdByTelephone(telephone);
+
+        String headUrl = userAvatarDOMapper.selectHeadUrlByUserId(userId);
+
+        return headUrl;
+    }
+
+    // 修改头像
+    @Override
+    public void updateUserHeadByTelephone(UserModel userModel) {
+
+        String telephone = userModel.getTelephone();
+        String headUrl = userModel.getHeadUrl();
+        Integer userId = userDOMapper.selectIdByTelephone(telephone);
+
+        UserAvatarDO userAvatarDO = new UserAvatarDO();
+        userAvatarDO.setUserId(userId);
+        userAvatarDO.setHeadUrl(headUrl);
+        System.out.println(headUrl.length());
+
+        userAvatarDOMapper.deleteByUserId(userId);
+        userAvatarDOMapper.insertSelective(userAvatarDO);
     }
 
     // 修改昵称
@@ -157,6 +189,17 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userModel, userDO);
 
         return userDO;
+    }
+
+    private UserAvatarDO convertAvatarFromModel(UserModel userModel) {
+        if (userModel == null) {
+            return null;
+        }
+
+        UserAvatarDO userAvatarDO = new UserAvatarDO();
+        BeanUtils.copyProperties(userModel, userAvatarDO);
+
+        return userAvatarDO;
     }
 
     private UserPasswordDO convertPasswordFromModel(UserModel userModel) {

@@ -73,3 +73,16 @@ INSERT INTO `user_schedule` VALUES (3, 111.836151, 27.813683, 5, '测试数据2'
 INSERT INTO `user_schedule` VALUES (4, 112.861774, 27.683813, 5, '标题', '哈哈哈哈哈哈', '1650677400', '2022-04-02 10:05:05', '2022-04-02 10:05:05');
 INSERT INTO `user_schedule` VALUES (5, 112.861774, 27.883111, 5, '新增数据3', '这是一条新增数据', '1647999000', '2022-04-02 10:08:05', '2022-04-02 10:08:05');
 INSERT INTO `user_schedule` VALUES (6, 113.861531, 27.883136, 5, '测试长度', '这是一条测试数据哦原来他放假吗范德萨可根据是的发达国家我的发表的发表反对是对方说的话', '1649395800', '2022-04-01 10:04:05', '2022-04-01 10:04:05');
+
+-- ----------------------------
+-- 创建 user_head 表结构
+-- ----------------------------
+DROP TABLE IF EXISTS `user_avatar`;
+CREATE TABLE `user_avatar`  (
+                                  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '关联用户id',
+                                  `head_url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL  DEFAULT '' COMMENT '头像路径',
+                                  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
+                                  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;

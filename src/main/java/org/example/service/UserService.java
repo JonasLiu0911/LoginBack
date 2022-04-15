@@ -10,20 +10,23 @@ import org.springframework.stereotype.Service;
 public interface UserService {
 
     // 通过用户id获取用户对象的方法
-    public UserModel getUserById(Integer id);
+    UserModel getUserById(Integer id);
 
     // 通过用户信息telephone获取对象的方法
-    public UserModel getUserInfoByTelephone(String telephone);
+    UserModel getUserInfoByTelephone(String telephone);
 
+    void updateUserHeadByTelephone(UserModel userModel) throws BusinessException;
     void updateUserNameByTelephone(UserModel userModel) throws BusinessException;
     void updateUserGenderByTelephone(UserModel userModel) throws BusinessException;
     void updateUserAgeByTelephone(UserModel userModel) throws BusinessException;
 
     void updateUserPasswordById(UserModel userModel) throws BusinessException;
 
-    public Boolean getUserByTelephone(String telephone);
+    Boolean getUserByTelephone(String telephone);
 
     void register(UserModel userModel) throws BusinessException;
 
     UserModel validateLogin(String telephone, String encryptPassword) throws BusinessException;
+
+    String getHeadUrlByTelephone(String telephone);
 }

@@ -47,7 +47,14 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false"></table>-->
 
-        <table tableName="user_schedule" domainObjectName="UserScheduleDO"
+<!--        <table tableName="user_schedule" domainObjectName="UserScheduleDO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false"></table>-->
+
+        <table tableName="user_avatar" domainObjectName="UserAvatarDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
