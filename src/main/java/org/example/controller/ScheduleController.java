@@ -76,7 +76,7 @@ public class ScheduleController extends BaseController {
         List<UserScheduleDO> userScheduleDOList = scheduleService.getScheduleByTelephoneForNow(telephone);
 
         if (userScheduleDOList.size() == 0) {
-            throw new BusinessException(EmBusinessError.SCHEDULE_NOT_EXIST);
+            throw new BusinessException(EmBusinessError.SCHEDULE_SUM_ZERO);
         }
 
         Map<String, Object> map = new HashMap<>();
@@ -99,7 +99,7 @@ public class ScheduleController extends BaseController {
         List<UserScheduleDO> userScheduleDOList = scheduleService.getHistoryByTel(telephone);
 
         if (userScheduleDOList.size() == 0) {
-            throw new BusinessException(EmBusinessError.SCHEDULE_NOT_EXIST);
+            throw new BusinessException(EmBusinessError.SCHEDULE_HISTORY_ZERO);
         }
 
         return CommonReturnType.create(userScheduleDOList);
