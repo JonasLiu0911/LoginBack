@@ -1,0 +1,55 @@
+卷 MORE 的文件夹 PATH 列表
+卷序列号为 70B6-1E2B
+G:.
+├─.idea
+│  ├─dataSources
+│  │  └─4c203dd2-0e52-4f78-91f9-163410072db6
+│  │      └─storage_v2
+│  │          └─_src_
+│  │              └─schema
+│  └─inspectionProfiles
+├─src
+│  ├─main
+│  │  ├─java
+│  │  │  └─org
+│  │  │      └─example
+│  │  │          ├─controller  // 控制器
+│  │  │          │  └─viewobject  // 视图对象
+│  │  │          ├─dao  // 数据操作类
+│  │  │          ├─dataobject  // 对象持久化
+│  │  │          ├─error  // 错误类型定义
+│  │  │          ├─response  // 响应类
+│  │  │          ├─service  // 服务接口
+│  │  │          │  ├─impl  // 服务接口方法
+│  │  │          │  └─model  // 对象模型
+│  │  │          ├─utils  // 方法工具类
+│  │  │          └─validator  // 验证方法
+│  │  └─resources
+│  │      └─mapping  // 映射文件
+│  └─test
+│      └─java
+│          └─org
+│              └─example
+└─target
+    ├─classes
+    │  ├─mapping
+    │  └─org
+    │      └─example
+    │          ├─controller
+    │          │  └─viewobject
+    │          ├─dao
+    │          ├─dataobject
+    │          ├─error
+    │          ├─response
+    │          ├─service
+    │          │  ├─impl
+    │          │  └─model
+    │          ├─utils
+    │          └─validator
+    ├─generated-sources
+    │  └─annotations
+    ├─generated-test-sources
+    │  └─test-annotations
+    └─test-classes
+        └─org
+            └─example
