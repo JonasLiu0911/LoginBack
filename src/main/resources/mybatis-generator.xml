@@ -54,12 +54,33 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false"></table>-->
 
-        <table tableName="user_avatar" domainObjectName="UserAvatarDO"
+<!--        <table tableName="user_avatar" domainObjectName="UserAvatarDO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false"></table>-->
+
+<!--        <table tableName="location_tags" domainObjectName="LocationTagsDO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false"></table>-->
+
+        <table tableName="temp" domainObjectName="tempDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
+
+<!--        <table tableName="analyze_result" domainObjectName="AnalyzeResultDO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false"></table>-->
 
     </context>
 </generatorConfiguration>

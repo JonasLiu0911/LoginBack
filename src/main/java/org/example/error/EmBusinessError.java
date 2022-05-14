@@ -14,7 +14,11 @@ public enum EmBusinessError implements CommonError{
     SCHEDULE_NOT_EXIST(30001, "日程不存在"),
     SCHEDULE_FIND_FAIL(30002, "日程查找失败"),
     SCHEDULE_SUM_ZERO(30003, "暂无日程"),
-    SCHEDULE_HISTORY_ZERO(30004, "暂无历史日程")
+    SCHEDULE_HISTORY_ZERO(30004, "暂无历史日程"),
+
+    Tags_Not_Exist(40001, "暂无标签"),
+
+    Temp_Not_Exist(40002, "暂无中转数据")
     ;
 
     private int code;

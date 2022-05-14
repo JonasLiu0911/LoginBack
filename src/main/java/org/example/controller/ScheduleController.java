@@ -32,7 +32,7 @@ import java.util.*;
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 public class ScheduleController extends BaseController {
 
-    private static Logger Log = LoggerFactory.getLogger(UserController.class);
+    private static Logger Log = LoggerFactory.getLogger(ScheduleController.class);
 
     @Autowired
     private ScheduleService scheduleService;
