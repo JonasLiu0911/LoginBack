@@ -45,6 +45,7 @@
     delete from temp
     where temp_id = #{tempId,jdbcType=INTEGER}
   </delete>
+  
   <insert id="insert" parameterType="org.example.dataobject.TempDO">
     <!--
       WARNING - @mbg.generated
@@ -133,5 +134,8 @@
     loc_describe = #{locDescribe,jdbcType=VARCHAR},
       tag = #{tag,jdbcType=VARCHAR}
     where temp_id = #{tempId,jdbcType=INTEGER}
+  </update>
+  <update id="truncateTemp">
+    truncate table temp;
   </update>
 </mapper>

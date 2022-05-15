@@ -54,4 +54,6 @@ public interface TempDOMapper {
      * @mbg.generated Sun May 08 08:58:16 CST 2022
      */
     int updateByPrimaryKey(TempDO record);
+
+    int truncateTemp();
 }

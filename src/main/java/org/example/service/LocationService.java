@@ -23,4 +23,6 @@ public interface LocationService {
     void addResultToResult(ResultModel resultModel) throws BusinessException;
 
     List<AnalyzeResultDO> getResultsByTel(String telephone);
+
+    void truncateTempFor24Hours();
 }

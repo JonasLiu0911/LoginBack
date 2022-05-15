@@ -102,6 +102,12 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    public void truncateTempFor24Hours() {
+        int num = tempDOMapper.truncateTemp();
+        System.out.println(num);
+    }
+
+    @Override
     public List<TempDO> getAllTempData() {
         List<TempDO> tempDOList = tempDOMapper.selectAll();
         return tempDOList;

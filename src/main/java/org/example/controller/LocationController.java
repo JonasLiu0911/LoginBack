@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,14 @@ public class LocationController extends BaseController {
     private List<TempDO> tempDOList;
 
     private Map<String, List<TempModel>> listMap;  // 全局变量，存储temp中的数据分组后的结果
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void testTasks() throws BusinessException {
+        System.out.println("每天0点执行一次");
+
+        dealDataFromTemp();
+
+    }
 
     /**
      * 获取全部设定好的位置标签
@@ -127,8 +136,6 @@ public class LocationController extends BaseController {
         return CommonReturnType.create(tempModel);
     }
 
-    @RequestMapping("/getAllTempData")
-    @ResponseBody
     private void dealDataFromTemp() throws BusinessException {
 
         listMap = new LinkedHashMap<>();
@@ -159,6 +166,7 @@ public class LocationController extends BaseController {
 
         saveAnalyzeResult(listMap);
 
+        locationService.truncateTempFor24Hours();
     }
 
     private TempModel tempDOtoMODEL(TempDO tempDO) {
